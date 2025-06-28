@@ -16,13 +16,13 @@
             >
               Inicio
             </button>
-            <button
+            <!-- <button
               @click="currentView = 'normas'"
               :class="buttonClass(currentView === 'normas')"
               class="ms-2"
             >
               Normas
-            </button>
+            </button> -->
             <button
               @click="logout"
               class="btn btn-outline-light ms-3"
@@ -35,11 +35,12 @@
 
       <!-- Main -->
       <main class="container py-5">
-        <h1 class="display-5 fw-bold text-center text-warning mb-5">
-          Bienvenido, {{ user }} 🚥 A la Web de F1
-        </h1>
-        <Inicio v-if="currentView === 'inicio'" />
+        <Inicio 
+        v-if="currentView === 'inicio'"
+         @goTo="currentView = $event" 
+        />
         <NormasFantasyF1 v-else-if="currentView === 'normas'" />
+        <Clasificacion v-if="currentView === 'clasificacion'" />
       </main>
     </div>
   </div>
@@ -50,6 +51,7 @@ import { ref, onMounted } from 'vue'
 import Login from './components/Login.vue'
 import Inicio from './components/Inicio.vue'
 import NormasFantasyF1 from './components/NormasFantasyF1.vue'
+import Clasificacion from './components/Clasificacion.vue'
 
 const user = ref(null)
 const currentView = ref('inicio')

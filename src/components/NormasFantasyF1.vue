@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-dark text-light py-5 min-vh-100 d-flex align-items-start justify-content-center">
-    <div class="container" style="max-width: 800px;">
+  <div class="bg-dark text-light py-5 min-vh-100">
+    <div class="container" style="max-width: 850px;">
       <div class="bg-black bg-gradient border border-danger rounded-4 shadow-lg p-5">
         <h1 class="display-4 fw-bold text-center text-danger mb-5">
           🏎️ Normas Fantasy F1
@@ -27,8 +27,8 @@
               class="accordion-collapse collapse"
               data-bs-parent="#accordionNormas"
             >
-              <div class="accordion-body">
-                <pre class="mb-0">{{ norma }}</pre>
+              <div class="accordion-body text-break">
+                <div style="white-space: pre-line;">{{ norma }}</div>
               </div>
             </div>
           </div>
