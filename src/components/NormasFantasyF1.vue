@@ -1,18 +1,22 @@
 <template>
-  <div class="bg-black text-white min-h-screen py-12 px-6 flex justify-center">
-    <div class="max-w-3xl w-full">
-      <h1 class="text-4xl font-bold text-red-600 mb-8 text-center">
+  <div class="min-h-screen py-16 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 flex justify-center">
+    <div class="max-w-3xl w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl border border-red-600 p-10">
+      <h1 class="text-5xl font-extrabold text-red-600 mb-10 text-center tracking-wide drop-shadow-lg">
         🏎️ Normas Fantasy F1
       </h1>
 
-      <div class="space-y-8">
+      <div class="space-y-10">
         <div
           v-for="(norma, index) in normas"
           :key="index"
-          class="bg-gray-900 p-5 rounded-lg shadow-lg border border-red-600 hover:border-red-500 transition"
+          class="bg-gradient-to-r from-red-900 via-gray-900 to-gray-800 p-6 rounded-lg border border-red-500 shadow-lg hover:shadow-red-600 transition duration-300"
         >
-          <h2 class="text-2xl font-semibold text-red-400 mb-3">Norma {{ index + 1 }}</h2>
-          <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ norma }}</p>
+          <h2 class="text-3xl font-semibold text-red-400 mb-4 tracking-tight drop-shadow-md">
+            Norma {{ index + 1 }}
+          </h2>
+          <p class="text-gray-300 whitespace-pre-line leading-relaxed font-medium tracking-wide">
+            {{ norma }}
+          </p>
         </div>
       </div>
     </div>
@@ -37,10 +41,3 @@ const normas = [
   `Si un participante tiene un piloto (que no sea de Red Bull, Ferrari, Mercedes o McLaren) que queda primero en la qualy, podrá quitarle 2 pilotos a otro en la siguiente carrera. Uno será elegido por él y el otro por sorteo.`
 ]
 </script>
-
-<style scoped>
-/* Evita scroll horizontal */
-html, body {
-  overflow-x: hidden;
-}
-</style>
