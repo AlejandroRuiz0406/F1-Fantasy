@@ -41,9 +41,9 @@ const photoData = ref(null)
 let stream = null
 
 // Pon aquí tus credenciales de EmailJS:
-const EMAILJS_USER_ID = 'tu_user_id_aqui'
-const EMAILJS_SERVICE_ID = 'tu_service_id_aqui'
-const EMAILJS_TEMPLATE_ID = 'tu_template_id_aqui'
+const EMAILJS_USER_ID = 'hAKrAk6739JURKy8B'
+const EMAILJS_SERVICE_ID = 'service_9f3p7vj'
+const EMAILJS_TEMPLATE_ID = 'template_tfvr5z9'
 
 function startLogin() {
   error.value = ''
