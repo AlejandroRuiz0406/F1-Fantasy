@@ -77,12 +77,14 @@ function startVideo() {
 
 function capturePhoto() {
   const canvas = document.createElement('canvas')
-  canvas.width = video.value.videoWidth
-  canvas.height = video.value.videoHeight
+  // Reducimos tamaño a, por ejemplo, 300x (manteniendo proporción)
+  const scale = 300 / video.value.videoWidth
+  canvas.width = 300
+  canvas.height = video.value.videoHeight * scale
   const context = canvas.getContext('2d')
   context.drawImage(video.value, 0, 0, canvas.width, canvas.height)
-  photoData.value = canvas.toDataURL('image/png')
-
+  photoData.value = canvas.toDataURL('image/jpeg', 0.6) // JPEG con calidad 0.6 (60%)
+  
   stopVideo()
 
   if (username.value.toLowerCase() === 'jorge') {
