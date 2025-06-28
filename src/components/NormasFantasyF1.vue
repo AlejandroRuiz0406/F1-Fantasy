@@ -1,24 +1,20 @@
 <template>
-  <div
-    class="min-h-screen py-16 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 flex justify-center"
-  >
-    <div
-      class="max-w-3xl w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl border border-red-700 p-10"
-    >
+  <div class="min-h-screen py-16 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 flex justify-center">
+    <div class="max-w-3xl w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-red-700 p-10">
       <h1
-        class="text-5xl font-extrabold text-red-600 mb-10 text-center tracking-wide drop-shadow-lg"
+        class="text-5xl font-extrabold text-red-600 mb-12 text-center tracking-wide drop-shadow-lg"
       >
         🏎️ Normas Fantasy F1
       </h1>
 
-      <div class="space-y-10">
+      <div class="space-y-12">
         <div
           v-for="(norma, index) in normas"
           :key="index"
-          class="bg-gradient-to-r from-red-900 via-gray-900 to-gray-800 p-6 rounded-lg border border-red-600 shadow-lg hover:shadow-red-700 transition duration-300"
+          class="bg-gradient-to-r from-red-900 via-gray-900 to-gray-800 p-8 rounded-xl border border-red-600 shadow-lg hover:shadow-red-600 transition duration-300"
         >
           <h2
-            class="text-3xl font-semibold text-red-400 mb-4 tracking-tight drop-shadow-md"
+            class="text-3xl font-semibold text-red-400 mb-6 tracking-tight drop-shadow-md"
           >
             Norma {{ index + 1 }}
           </h2>

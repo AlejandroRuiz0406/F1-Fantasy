@@ -1,49 +1,44 @@
 <template>
   <div>
     <Login v-if="!user" @login-success="handleLogin" />
-    <div v-else>
-      <nav
-        class="navbar navbar-expand-lg"
-        :class="['px-4', 'bg-gradient-to-r', 'from-gray-900', 'via-gray-800', 'to-black', 'border-b-2', 'border-red-700']"
-      >
+    <div v-else class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
+      <nav class="flex items-center justify-between bg-gradient-to-r from-red-900 to-black px-6 py-4 shadow-lg">
         <a
-          class="navbar-brand text-red-600 font-extrabold cursor-pointer hover:text-red-400"
           href="#"
           @click.prevent="currentView = 'inicio'"
+          class="text-2xl font-extrabold tracking-widest text-red-600 hover:text-red-400 transition"
         >
           Fantasy F1
         </a>
-        <div class="ml-auto">
+        <div class="space-x-4">
           <button
-            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
-            :class="{ 'btn-active': currentView === 'inicio' }"
             @click="currentView = 'inicio'"
+            :class="buttonClass(currentView === 'inicio')"
           >
             Inicio
           </button>
           <button
-            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
-            :class="{ 'btn-active': currentView === 'normas' }"
             @click="currentView = 'normas'"
+            :class="buttonClass(currentView === 'normas')"
           >
             Normas
           </button>
           <button
-            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
             @click="logout"
+            class="px-4 py-2 rounded bg-red-700 hover:bg-red-600 transition"
           >
             Cerrar sesión
           </button>
         </div>
       </nav>
 
-      <div class="p-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black min-h-screen text-gray-100">
-        <h1 class="text-4xl font-bold mb-6 text-red-600 drop-shadow-lg">
+      <main class="p-8 max-w-5xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-red-500 drop-shadow-lg">
           Bienvenido, {{ user }} a la Web de F1 🏎️
         </h1>
         <Inicio v-if="currentView === 'inicio'" />
         <NormasFantasyF1 v-else-if="currentView === 'normas'" />
-      </div>
+      </main>
     </div>
   </div>
 </template>
@@ -71,12 +66,9 @@ const logout = () => {
   localStorage.removeItem('user')
   user.value = null
 }
-</script>
 
-<style>
-.btn-active {
-  background-color: #b91c1c; /* rojo intenso */
-  color: white !important;
-  border-color: #991b1b !important;
-}
-</style>
+const buttonClass = (active) =>
+  active
+    ? 'px-4 py-2 rounded bg-red-600 text-white font-semibold shadow-md hover:bg-red-500 transition'
+    : 'px-4 py-2 rounded bg-transparent border border-red-600 text-red-400 hover:bg-red-700 hover:text-white transition'
+</script>
