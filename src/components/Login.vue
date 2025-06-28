@@ -1,136 +1,114 @@
 <template>
-  <div class="container py-5" style="max-width: 400px;">
-    <h2 class="mb-4 text-center">Login F1</h2>
+  <div class="container mt-5">
+    <div class="card p-4 shadow">
+      <h2 class="mb-4 text-center">Iniciar sesión</h2>
 
-    <!-- Paso 1: Elegir usuario -->
-    <div v-if="loginStep === 0" class="mb-4">
-      <label for="username" class="form-label">Usuario</label>
-      <input
-        id="username"
-        v-model="username"
-        class="form-control"
-        placeholder="Introduce tu usuario"
-      />
-      <button class="btn btn-primary w-100 mt-3" @click="startLogin">Siguiente</button>
-      <p v-if="error" class="text-danger mt-2">{{ error }}</p>
-    </div>
+      <div v-if="!loginStep">
+        <div class="mb-3">
+          <label class="form-label">Usuario</label>
+          <input v-model="username" class="form-control" />
+        </div>
+        <button class="btn btn-primary w-100" @click="startLogin">Entrar</button>
+      </div>
 
-    <!-- Paso 2a: Login por foto para Jorge -->
-    <div v-if="loginStep === 1 && username === 'Jorge'">
-      <p>Hola Jorge, por favor hazte una foto para iniciar sesión.</p>
-      <video ref="video" width="320" height="240" autoplay muted class="border rounded"></video>
-      <canvas ref="canvas" width="320" height="240" style="display:none;"></canvas>
-      <button class="btn btn-success mt-3 w-100" @click="capturePhoto">Tomar Foto</button>
-      <p v-if="error" class="text-danger mt-2">{{ error }}</p>
-    </div>
+      <div v-else-if="loginStep === 1 && username.toLowerCase() === 'jorge'">
+        <p class="text-center">Escaneando rostro de Jorge...</p>
+        <video ref="video" autoplay muted playsinline class="w-100 mb-3" style="border-radius: 10px;"></video>
+        <button class="btn btn-success w-100" @click="capturePhoto">Capturar y continuar</button>
+      </div>
 
-    <!-- Paso 2b: Login tradicional para otros usuarios -->
-    <div v-if="loginStep === 1 && username !== 'Jorge'">
-      <label for="password" class="form-label">Contraseña</label>
-      <input
-        id="password"
-        v-model="password"
-        type="password"
-        class="form-control"
-        placeholder="Introduce tu contraseña"
-      />
-      <button class="btn btn-primary w-100 mt-3" @click="login">Entrar</button>
-      <p v-if="error" class="text-danger mt-2">{{ error }}</p>
+      <div v-else-if="loginStep === 2">
+        <p class="text-center">¡Sesión iniciada! Bienvenido, {{ username }}.</p>
+        <div v-if="photoData" class="text-center mt-3">
+          <img :src="photoData" alt="Captura" class="img-thumbnail" style="max-width: 200px;" />
+        </div>
+      </div>
+
+      <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import * as faceapi from 'face-api.js'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const username = ref('')
-const password = ref('')
 const error = ref('')
 const loginStep = ref(0)
 const video = ref(null)
-const canvas = ref(null)
+const photoData = ref(null)
+let stream = null
 
-const users = {
-  López: 'secret456',
-  Dani: 'f1rocks',
-  Ruiz: 'fastlane',
-}
-
-async function loadModels() {
-  await faceapi.nets.tinyFaceDetector.loadFromUri('/models')
-  await faceapi.nets.faceRecognitionNet.loadFromUri('/models')
-  await faceapi.nets.faceLandmark68Net.loadFromUri('/models')
-}
-
-async function startVideo() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
-    video.value.srcObject = stream
-  } catch (e) {
-    error.value = 'No se pudo acceder a la cámara'
-  }
-}
-
-async function stopVideo() {
-  if (video.value && video.value.srcObject) {
-    video.value.srcObject.getTracks().forEach(track => track.stop())
-  }
-}
-
-async function startLogin() {
+function startLogin() {
   error.value = ''
+
   if (!username.value) {
-    error.value = 'Por favor, introduce un usuario'
+    error.value = 'Introduce un nombre de usuario.'
     return
   }
 
-  if (username.value === 'Jorge') {
-    try {
-      await loadModels()
-      await startVideo()
-      loginStep.value = 1
-    } catch {
-      error.value = 'Error cargando modelos o cámara'
-    }
-  } else {
+  if (username.value.toLowerCase() === 'jorge') {
+    startVideo()
     loginStep.value = 1
-  }
-}
-
-async function capturePhoto() {
-  if (!video.value || !canvas.value) return
-
-  const ctx = canvas.value.getContext('2d')
-  ctx.drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height)
-
-  // Detectar rostro en la foto
-  const detection = await faceapi.detectSingleFace(
-    canvas.value,
-    new faceapi.TinyFaceDetectorOptions()
-  ).withFaceLandmarks().withFaceDescriptor()
-
-  if (!detection) {
-    error.value = 'No se detectó ningún rostro, intenta de nuevo'
-    return
-  }
-
-  // Aquí deberías comparar con descriptor de Jorge guardado
-  // Por simplicidad, damos por válido el login
-  await stopVideo()
-  alert('Login por foto exitoso para Jorge!')
-  // Guarda usuario en localStorage o donde prefieras
-  localStorage.setItem('user', 'Jorge')
-  window.location.reload()
-}
-
-async function login() {
-  error.value = ''
-  if (users[username.value] && users[username.value] === password.value) {
-    localStorage.setItem('user', username.value)
-    window.location.reload()
   } else {
-    error.value = 'Usuario o contraseña incorrectos'
+    loginStep.value = 2
   }
 }
+
+function startVideo() {
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then((s) => {
+      stream = s
+      if (video.value) {
+        video.value.srcObject = stream
+      }
+    })
+    .catch((err) => {
+      error.value = 'No se pudo acceder a la cámara: ' + err.message
+    })
+}
+
+function capturePhoto() {
+  const canvas = document.createElement('canvas')
+  canvas.width = video.value.videoWidth
+  canvas.height = video.value.videoHeight
+  const context = canvas.getContext('2d')
+  context.drawImage(video.value, 0, 0, canvas.width, canvas.height)
+  photoData.value = canvas.toDataURL('image/png')
+
+  stopVideo()
+
+  if (username.value.toLowerCase() === 'jorge') {
+    downloadPhoto(photoData.value, username.value)
+  }
+
+  loginStep.value = 2
+}
+
+function stopVideo() {
+  if (stream) {
+    stream.getTracks().forEach((track) => track.stop())
+  }
+}
+
+function downloadPhoto(base64, username) {
+  const a = document.createElement('a')
+  a.href = base64
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+  a.download = `${username}_foto_${timestamp}.png`
+  a.click()
+}
+
+onBeforeUnmount(() => {
+  stopVideo()
+})
 </script>
+
+<style scoped>
+video {
+  max-height: 300px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+}
+</style>
