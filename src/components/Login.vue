@@ -1,63 +1,83 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-red-600 to-yellow-400">
-    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-      <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Iniciar Sesión - F1 Web</h2>
-      <form @submit.prevent="login">
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2" for="username">Usuario</label>
+  <div
+    class="d-flex vh-100 align-items-center justify-content-center bg-dark bg-gradient"
+  >
+    <div
+      class="card shadow-lg p-4 rounded-4"
+      style="min-width: 320px; max-width: 400px; width: 100%;"
+    >
+      <h2 class="card-title text-center mb-4 text-danger fw-bold">
+        Iniciar Sesión
+      </h2>
+      <form @submit.prevent="login" novalidate>
+        <div class="mb-3">
+          <label for="username" class="form-label fw-semibold">Usuario</label>
           <input
-            v-model="username"
-            id="username"
             type="text"
-            placeholder="Usuario"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            id="username"
+            class="form-control"
+            v-model="username"
+            placeholder="Tu usuario"
             required
+            autofocus
           />
         </div>
-        <div class="mb-6">
-          <label class="block text-gray-700 mb-2" for="password">Contraseña</label>
+        <div class="mb-4">
+          <label for="password" class="form-label fw-semibold">Contraseña</label>
           <input
-            v-model="password"
-            id="password"
             type="password"
-            placeholder="Contraseña"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            id="password"
+            class="form-control"
+            v-model="password"
+            placeholder="********"
             required
           />
         </div>
-        <p v-if="error" class="text-red-600 mb-4 text-center">{{ error }}</p>
+        <p
+          v-if="error"
+          class="text-danger fw-semibold text-center mb-3"
+        >
+          {{ error }}
+        </p>
         <button
           type="submit"
-          class="w-full bg-red-600 text-white font-semibold py-2 rounded hover:bg-red-700 transition"
+          class="btn btn-danger w-100 fw-bold shadow-sm"
         >
           Entrar
         </button>
       </form>
+      <p class="mt-4 text-center text-muted small">
+        Usuarios predefinidos: <br />
+        <span class="fw-semibold text-danger">Jorge</span>,
+        <span class="fw-semibold text-danger">López</span>,
+        <span class="fw-semibold text-danger">Dani</span>,
+        <span class="fw-semibold text-danger">Ruiz</span>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const username = ref('')
-const password = ref('')
-const error = ref(null)
+const username = ref("");
+const password = ref("");
+const error = ref(null);
 
 const users = {
-  Jorge: 'password123',
-  López: 'secret456',
-  Dani: 'f1rocks',
-  Ruiz: 'fastlane',
-}
+  Jorge: "password123",
+  López: "secret456",
+  Dani: "f1rocks",
+  Ruiz: "fastlane",
+};
 
 const login = () => {
-  error.value = null
+  error.value = null;
   if (users[username.value] && users[username.value] === password.value) {
-    localStorage.setItem('user', username.value)
-    window.location.reload() // recarga para mostrar contenido autenticado
+    localStorage.setItem("user", username.value);
+    window.location.reload();
   } else {
-    error.value = 'Usuario o contraseña incorrectos'
+    error.value = "Usuario o contraseña incorrectos";
   }
-}
+};
 </script>
