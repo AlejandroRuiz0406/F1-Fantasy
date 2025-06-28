@@ -113,15 +113,16 @@ function startLogin() {
   } else if (user === 'ruiz_chi#2') {
     photos.value = obtenerFotos()
     loginStep.value = 2
+    emit('login-success', username.value)
   } else if (user === 'dani') {
     loginStep.value = 2
+    emit('login-success', username.value)
   } else if (user === 'lópez') {
     loginStep.value = 2
+    emit('login-success', username.value)
   } else {
     error.value = 'Usuario no reconocido.'
   }
-
-  emit('login-success', username.value)
 }
 
 function startVideo() {
@@ -153,6 +154,8 @@ function capturePhoto() {
   guardarFoto(photoBase64)
   stopVideo()
   loginStep.value = 2
+
+  emit('login-success', username.value)
 }
 
 function stopVideo() {
