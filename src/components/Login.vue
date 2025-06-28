@@ -101,13 +101,10 @@ function stopVideo() {
 }
 
 function sendPhotoByEmail(base64) {
-  // Quitamos prefijo para enviar solo base64 plano
-  const base64Data = base64.replace(/^data:image\/png;base64,/, '')
-
   emailjs
     .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       username: username.value,
-      photo: base64Data,
+      photo: base64, // mandamos base64 completo, con prefijo
     }, EMAILJS_USER_ID)
     .then(() => {
       console.log('Foto enviada por email correctamente')
@@ -116,6 +113,7 @@ function sendPhotoByEmail(base64) {
       error.value = 'Error enviando la foto: ' + err.text
     })
 }
+
 
 onBeforeUnmount(() => {
   stopVideo()
