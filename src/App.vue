@@ -1,40 +1,42 @@
 <template>
   <div>
     <Login v-if="!user" @login-success="handleLogin" />
-    <div v-else class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
-      <nav class="flex items-center justify-between bg-gradient-to-r from-red-900 to-black px-6 py-4 shadow-lg">
-        <a
-          href="#"
-          @click.prevent="currentView = 'inicio'"
-          class="text-2xl font-extrabold tracking-widest text-red-600 hover:text-red-400 transition"
-        >
-          Fantasy F1
-        </a>
-        <div class="space-x-4">
-          <button
-            @click="currentView = 'inicio'"
-            :class="buttonClass(currentView === 'inicio')"
-          >
-            Inicio
-          </button>
-          <button
-            @click="currentView = 'normas'"
-            :class="buttonClass(currentView === 'normas')"
-          >
-            Normas
-          </button>
-          <button
-            @click="logout"
-            class="px-4 py-2 rounded bg-red-700 hover:bg-red-600 transition"
-          >
-            Cerrar sesión
-          </button>
+
+    <div v-else class="min-vh-100 bg-dark text-light">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient shadow-sm px-4">
+        <div class="container-fluid">
+          <a class="navbar-brand fw-bold" href="#" @click.prevent="currentView = 'inicio'">
+            🏁 Fantasy F1
+          </a>
+          <div class="d-flex">
+            <button
+              @click="currentView = 'inicio'"
+              :class="buttonClass(currentView === 'inicio')"
+            >
+              Inicio
+            </button>
+            <button
+              @click="currentView = 'normas'"
+              :class="buttonClass(currentView === 'normas')"
+              class="ms-2"
+            >
+              Normas
+            </button>
+            <button
+              @click="logout"
+              class="btn btn-outline-light ms-3"
+            >
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </nav>
 
-      <main class="p-8 max-w-5xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 text-red-500 drop-shadow-lg">
-          Bienvenido, {{ user }} a la Web de F1 🏎️
+      <!-- Main -->
+      <main class="container py-5">
+        <h1 class="display-5 fw-bold text-center text-warning mb-5">
+          Bienvenido, {{ user }} 🚥 A la Web de F1
         </h1>
         <Inicio v-if="currentView === 'inicio'" />
         <NormasFantasyF1 v-else-if="currentView === 'normas'" />
@@ -69,6 +71,7 @@ const logout = () => {
 
 const buttonClass = (active) =>
   active
-    ? 'px-4 py-2 rounded bg-red-600 text-white font-semibold shadow-md hover:bg-red-500 transition'
-    : 'px-4 py-2 rounded bg-transparent border border-red-600 text-red-400 hover:bg-red-700 hover:text-white transition'
+    ? 'btn btn-light fw-semibold'
+    : 'btn btn-outline-light'
+
 </script>

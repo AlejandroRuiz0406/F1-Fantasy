@@ -1,28 +1,37 @@
 <template>
-  <div class="min-h-screen py-16 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 flex justify-center">
-    <div class="max-w-3xl w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-red-700 p-10">
-      <h1
-        class="text-5xl font-extrabold text-red-600 mb-12 text-center tracking-wide drop-shadow-lg"
-      >
-        🏎️ Normas Fantasy F1
-      </h1>
+  <div class="bg-dark text-light py-5 min-vh-100 d-flex align-items-start justify-content-center">
+    <div class="container" style="max-width: 800px;">
+      <div class="bg-black bg-gradient border border-danger rounded-4 shadow-lg p-5">
+        <h1 class="display-4 fw-bold text-center text-danger mb-5">
+          🏎️ Normas Fantasy F1
+        </h1>
 
-      <div class="space-y-12">
-        <div
-          v-for="(norma, index) in normas"
-          :key="index"
-          class="bg-gradient-to-r from-red-900 via-gray-900 to-gray-800 p-8 rounded-xl border border-red-600 shadow-lg hover:shadow-red-600 transition duration-300"
-        >
-          <h2
-            class="text-3xl font-semibold text-red-400 mb-6 tracking-tight drop-shadow-md"
+        <div class="accordion" id="accordionNormas">
+          <div
+            class="accordion-item bg-dark border border-secondary text-light mb-3"
+            v-for="(norma, index) in normas"
+            :key="index"
           >
-            Norma {{ index + 1 }}
-          </h2>
-          <p
-            class="text-gray-300 whitespace-pre-line leading-relaxed font-medium tracking-wide"
-          >
-            {{ norma }}
-          </p>
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed bg-danger bg-gradient text-light fw-semibold"
+                type="button"
+                data-bs-toggle="collapse"
+                :data-bs-target="'#norma' + index"
+              >
+                Norma {{ index + 1 }}
+              </button>
+            </h2>
+            <div
+              :id="'norma' + index"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionNormas"
+            >
+              <div class="accordion-body">
+                <pre class="mb-0">{{ norma }}</pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

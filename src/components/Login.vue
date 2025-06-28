@@ -97,6 +97,7 @@ const photos = ref([])
 const showGallery = ref(false)
 const emit = defineEmits(['login-success'])
 
+
 function startLogin() {
   error.value = ''
   if (!username.value) {
