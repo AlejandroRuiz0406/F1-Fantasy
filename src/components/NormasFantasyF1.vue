@@ -1,23 +1,33 @@
 <template>
-  <div class="min-h-screen bg-[#121212] text-white py-16 px-6 flex justify-center">
-    <div class="max-w-3xl w-full bg-[#1f1f1f] rounded-lg shadow-lg border border-[#e10600] p-10">
-      <h1 class="text-4xl font-extrabold text-[#f44336] mb-12 text-center tracking-wide drop-shadow-[0_2px_5px_rgba(244,67,54,0.8)] font-sans">
+  <div
+    class="min-h-screen py-16 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 flex justify-center"
+  >
+    <div
+      class="max-w-3xl w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl border border-red-700 p-10"
+    >
+      <h1
+        class="text-5xl font-extrabold text-red-600 mb-10 text-center tracking-wide drop-shadow-lg"
+      >
         🏎️ Normas Fantasy F1
       </h1>
 
       <div class="space-y-10">
-        <section
+        <div
           v-for="(norma, index) in normas"
           :key="index"
-          class="bg-[#292929] border border-[#d84315] rounded-lg p-6 shadow-md hover:shadow-[#f4511e] transition-shadow duration-300"
+          class="bg-gradient-to-r from-red-900 via-gray-900 to-gray-800 p-6 rounded-lg border border-red-600 shadow-lg hover:shadow-red-700 transition duration-300"
         >
-          <h2 class="text-2xl font-semibold text-[#ff7043] mb-4 tracking-wide drop-shadow-[0_1px_3px_rgba(255,112,67,0.7)] font-sans">
+          <h2
+            class="text-3xl font-semibold text-red-400 mb-4 tracking-tight drop-shadow-md"
+          >
             Norma {{ index + 1 }}
           </h2>
-          <p class="text-gray-300 whitespace-pre-line leading-relaxed font-medium tracking-wide font-sans">
+          <p
+            class="text-gray-300 whitespace-pre-line leading-relaxed font-medium tracking-wide"
+          >
             {{ norma }}
           </p>
-        </section>
+        </div>
       </div>
     </div>
   </div>

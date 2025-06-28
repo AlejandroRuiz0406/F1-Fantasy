@@ -1,80 +1,82 @@
 <template>
-  <div class="min-h-screen bg-[#121212] text-white font-sans">
-    <!-- Navbar -->
-    <nav class="bg-[#1f1f1f] border-b border-[#e10600] shadow-md">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="text-2xl font-extrabold text-[#f44336] tracking-wide select-none drop-shadow-[0_2px_5px_rgba(244,67,54,0.8)]">
-          F1 Fantasy
-        </div>
-        <div class="space-x-6 flex items-center">
+  <div>
+    <Login v-if="!user" @login-success="handleLogin" />
+    <div v-else>
+      <nav
+        class="navbar navbar-expand-lg"
+        :class="['px-4', 'bg-gradient-to-r', 'from-gray-900', 'via-gray-800', 'to-black', 'border-b-2', 'border-red-700']"
+      >
+        <a
+          class="navbar-brand text-red-600 font-extrabold cursor-pointer hover:text-red-400"
+          href="#"
+          @click.prevent="currentView = 'inicio'"
+        >
+          Fantasy F1
+        </a>
+        <div class="ml-auto">
           <button
-            v-if="user"
+            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
+            :class="{ 'btn-active': currentView === 'inicio' }"
+            @click="currentView = 'inicio'"
+          >
+            Inicio
+          </button>
+          <button
+            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
+            :class="{ 'btn-active': currentView === 'normas' }"
+            @click="currentView = 'normas'"
+          >
+            Normas
+          </button>
+          <button
+            class="btn btn-outline-light mx-2 text-red-400 hover:text-red-600 border-red-600 hover:border-red-700"
             @click="logout"
-            class="px-4 py-2 bg-[#f44336] hover:bg-[#d32f2f] rounded font-semibold transition-colors duration-300"
           >
             Cerrar sesión
           </button>
         </div>
-      </div>
-    </nav>
+      </nav>
 
-    <!-- Contenido principal -->
-    <main class="max-w-4xl mx-auto p-10">
-      <Login v-if="!user" @login-success="onLoginSuccess" />
-
-      <div v-else>
-        <h1 class="text-4xl font-extrabold text-[#f44336] mb-8 tracking-wide drop-shadow-[0_2px_5px_rgba(244,67,54,0.8)]">
+      <div class="p-6 bg-gradient-to-b from-gray-900 via-gray-800 to-black min-h-screen text-gray-100">
+        <h1 class="text-4xl font-bold mb-6 text-red-600 drop-shadow-lg">
           Bienvenido, {{ user }} a la Web de F1 🏎️
         </h1>
-        <p class="text-gray-300 leading-relaxed mb-8 text-lg">
-          ¡Aquí encontrarás noticias, estadísticas y todo lo que necesitas para tu Fantasy F1!
-        </p>
-
-        <button
-          @click="mostrarNormas = !mostrarNormas"
-          class="px-5 py-3 bg-[#f4511e] hover:bg-[#bf360c] rounded-lg font-semibold transition-colors duration-300"
-        >
-          {{ mostrarNormas ? 'Ocultar Normas' : 'Ver Normas del Fantasy F1' }}
-        </button>
-
-        <transition name="fade">
-          <div v-if="mostrarNormas" class="mt-10">
-            <NormasF1 />
-          </div>
-        </transition>
+        <Inicio v-if="currentView === 'inicio'" />
+        <NormasFantasyF1 v-else-if="currentView === 'normas'" />
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Login from './components/Login.vue'
-import NormasF1 from './components/NormasFantasyF1.vue' // Aquí pones el componente de las normas que te pasé antes
+import Inicio from './components/Inicio.vue'
+import NormasFantasyF1 from './components/NormasFantasyF1.vue'
 
-const user = ref(localStorage.getItem('user'))
-const mostrarNormas = ref(false)
+const user = ref(null)
+const currentView = ref('inicio')
 
-function onLoginSuccess(username) {
+onMounted(() => {
+  user.value = localStorage.getItem('user')
+})
+
+const handleLogin = (username) => {
   user.value = username
   localStorage.setItem('user', username)
-  mostrarNormas.value = false
+  currentView.value = 'inicio'
 }
 
-function logout() {
-  user.value = null
+const logout = () => {
   localStorage.removeItem('user')
-  mostrarNormas.value = false
+  user.value = null
 }
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.btn-active {
+  background-color: #b91c1c; /* rojo intenso */
+  color: white !important;
+  border-color: #991b1b !important;
 }
 </style>
