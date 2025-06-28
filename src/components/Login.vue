@@ -95,6 +95,7 @@ const video = ref(null)
 let stream = null
 const photos = ref([])
 const showGallery = ref(false)
+const emit = defineEmits(['login-success'])
 
 function startLogin() {
   error.value = ''
@@ -118,6 +119,8 @@ function startLogin() {
   } else {
     error.value = 'Usuario no reconocido.'
   }
+
+  emit('login-success', username.value)
 }
 
 function startVideo() {
