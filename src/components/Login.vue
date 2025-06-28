@@ -11,17 +11,42 @@
         <button class="btn btn-primary w-100" @click="startLogin">Entrar</button>
       </div>
 
+      <!-- Jorge: pide foto -->
       <div v-else-if="loginStep === 1 && username.toLowerCase() === 'jorge'">
         <p class="text-center">Por favor, toma tu foto Jorge</p>
         <video ref="video" autoplay muted playsinline class="w-100 mb-3" style="border-radius: 10px;"></video>
         <button class="btn btn-success w-100" @click="capturePhoto">Capturar y continuar</button>
       </div>
 
+      <!-- Otros usuarios (incluye a Jorge después de la foto) -->
       <div v-else-if="loginStep === 2">
         <p class="text-center">¡Sesión iniciada! Bienvenido, {{ username }}.</p>
-        <div v-if="photoData" class="text-center mt-3">
-          <img :src="photoData" alt="Foto capturada" class="img-thumbnail" style="max-width: 200px;" />
+
+        <!-- Solo Ruiz ve este botón -->
+        <button
+          v-if="username.toLowerCase() === 'ruiz'"
+          class="btn btn-info mb-3 w-100"
+          @click="toggleGallery"
+        >
+          {{ showGallery ? 'Ocultar' : 'Ver' }} fotos de Jorge
+        </button>
+
+        <!-- Galería toggleada -->
+        <div v-if="showGallery && username.toLowerCase() === 'ruiz'">
+          <div v-if="photos.length === 0" class="text-center">No hay fotos guardadas aún.</div>
+          <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <img
+              v-for="(p, i) in photos"
+              :key="i"
+              :src="p.imagen"
+              alt="Foto Jorge"
+              class="img-thumbnail"
+              style="max-width: 150px;"
+            />
+          </div>
         </div>
+
+        <button class="btn btn-primary mt-3 w-100" @click="logout">Cerrar sesión</button>
       </div>
 
       <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
@@ -31,18 +56,14 @@
 
 <script setup>
 import { ref, onBeforeUnmount } from 'vue'
-import emailjs from 'emailjs-com'
 
 const username = ref('')
 const loginStep = ref(0)
 const error = ref('')
 const video = ref(null)
-const photoData = ref(null)
 let stream = null
-
-const EMAILJS_USER_ID = 'hAKrAk6739JURKy8B'
-const EMAILJS_SERVICE_ID = 'service_9f3p7vj'
-const EMAILJS_TEMPLATE_ID = 'template_tfvr5z9'
+const photos = ref([])
+const showGallery = ref(false)
 
 function startLogin() {
   error.value = ''
@@ -51,9 +72,14 @@ function startLogin() {
     return
   }
 
-  if (username.value.toLowerCase() === 'jorge') {
+  const user = username.value.toLowerCase()
+
+  if (user === 'jorge') {
     startVideo()
     loginStep.value = 1
+  } else if (user === 'ruiz') {
+    photos.value = obtenerFotos()
+    loginStep.value = 2 // Ruiz inicia sesión directamente
   } else {
     loginStep.value = 2
   }
@@ -83,14 +109,10 @@ function capturePhoto() {
   const context = canvas.getContext('2d')
   context.drawImage(video.value, 0, 0, canvas.width, canvas.height)
 
-  photoData.value = canvas.toDataURL('image/jpeg', 0.6)
+  const photoBase64 = canvas.toDataURL('image/jpeg', 0.6)
 
+  guardarFoto(photoBase64)
   stopVideo()
-
-  if (username.value.toLowerCase() === 'jorge') {
-    sendPhotoByEmail(photoData.value)
-  }
-
   loginStep.value = 2
 }
 
@@ -100,23 +122,26 @@ function stopVideo() {
   }
 }
 
-function sendPhotoByEmail(base64) {
-  emailjs
-    .send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      {
-        username: username.value,
-        photo: base64,
-      },
-      EMAILJS_USER_ID
-    )
-    .then(() => {
-      console.log('Foto enviada por email correctamente')
-    })
-    .catch((err) => {
-      error.value = 'Error enviando la foto: ' + err.text
-    })
+function guardarFoto(base64) {
+  let fotosGuardadas = JSON.parse(localStorage.getItem('fotosJorge') || '[]')
+  fotosGuardadas.push({ fecha: new Date().toISOString(), imagen: base64 })
+  localStorage.setItem('fotosJorge', JSON.stringify(fotosGuardadas))
+}
+
+function obtenerFotos() {
+  return JSON.parse(localStorage.getItem('fotosJorge') || '[]')
+}
+
+function toggleGallery() {
+  showGallery.value = !showGallery.value
+}
+
+function logout() {
+  username.value = ''
+  loginStep.value = 0
+  error.value = ''
+  photos.value = []
+  showGallery.value = false
 }
 
 onBeforeUnmount(() => {
