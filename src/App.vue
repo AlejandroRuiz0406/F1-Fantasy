@@ -50,7 +50,7 @@
 <script setup>
 import { ref } from 'vue'
 import Login from './components/Login.vue'
-import NormasF1 from './components/NormasF1.vue' // Aquí pones el componente de las normas que te pasé antes
+import NormasF1 from './components/NormasFantasyF1.vue' // Aquí pones el componente de las normas que te pasé antes
 
 const user = ref(localStorage.getItem('user'))
 const mostrarNormas = ref(false)
