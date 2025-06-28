@@ -1,39 +1,62 @@
 <template>
-  <div class="container mt-5">
-    <div class="card p-4 shadow">
-      <h2 class="mb-4 text-center">Iniciar sesión</h2>
+  <div class="login-container d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-white px-3">
+    <div class="login-card p-4 rounded shadow-lg" style="max-width: 400px; width: 100%; background: #111;">
+      <h2 class="text-center mb-4" style="color: #e10600; font-weight: 700; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        Iniciar sesión F1
+      </h2>
 
       <div v-if="loginStep === 0">
         <div class="mb-3">
-          <label class="form-label">Usuario</label>
-          <input v-model="username" class="form-control" />
+          <label for="username" class="form-label fw-semibold" style="color: #e10600;">Usuario</label>
+          <input
+            id="username"
+            v-model="username"
+            class="form-control form-control-lg bg-dark text-white border-2 border-secondary"
+            placeholder="Introduce tu usuario"
+            autocomplete="off"
+          />
         </div>
-        <button class="btn btn-primary w-100" @click="startLogin">Entrar</button>
-      </div>
-
-      <!-- Jorge: pide foto -->
-      <div v-else-if="loginStep === 1 && username.toLowerCase() === 'jorge'">
-        <p class="text-center">Por favor, toma tu foto Jorge</p>
-        <video ref="video" autoplay muted playsinline class="w-100 mb-3" style="border-radius: 10px;"></video>
-        <button class="btn btn-success w-100" @click="capturePhoto">Capturar y continuar</button>
-      </div>
-
-      <!-- Otros usuarios (incluye a Jorge después de la foto) -->
-      <div v-else-if="loginStep === 2">
-        <p class="text-center">¡Sesión iniciada! Bienvenido, {{ username }}.</p>
-
-        <!-- Solo Ruiz ve este botón -->
         <button
-          v-if="username.toLowerCase() === 'ruiz'"
-          class="btn btn-info mb-3 w-100"
+          class="btn btn-danger btn-lg w-100 fw-bold"
+          @click="startLogin"
+          :disabled="!username"
+          style="letter-spacing: 1px;"
+        >
+          Entrar
+        </button>
+      </div>
+
+      <div v-else-if="loginStep === 1 && username.toLowerCase() === 'jorge_gar_koke'">
+        <p class="text-center mb-3" style="color: #e10600; font-weight: 600;">Por favor, toma tu foto Jorge</p>
+        <video
+          ref="video"
+          autoplay
+          muted
+          playsinline
+          class="w-100 rounded shadow"
+          style="border: 3px solid #e10600; max-height: 320px; object-fit: cover;"
+        ></video>
+        <button class="btn btn-danger btn-lg w-100 mt-3 fw-bold" @click="capturePhoto" style="letter-spacing: 1px;">
+          Capturar y continuar
+        </button>
+      </div>
+
+      <div v-else-if="loginStep === 2">
+        <p class="text-center fs-5 mb-4" style="color: #fff;">
+          ¡Sesión iniciada! Bienvenido, <span class="fw-bold" style="color: #e10600;">{{ username }}</span>.
+        </p>
+
+        <button
+          v-if="username.toLowerCase() === 'ruiz_chi#2'"
+          class="btn btn-outline-danger w-100 mb-3 fw-semibold"
           @click="toggleGallery"
+          style="letter-spacing: 1px;"
         >
           {{ showGallery ? 'Ocultar' : 'Ver' }} fotos de Jorge
         </button>
 
-        <!-- Galería toggleada -->
-        <div v-if="showGallery && username.toLowerCase() === 'ruiz'">
-          <div v-if="photos.length === 0" class="text-center">No hay fotos guardadas aún.</div>
+        <div v-if="showGallery && username.toLowerCase() === 'ruiz_chi#2'" class="gallery-container rounded p-3 bg-black bg-opacity-50">
+          <div v-if="photos.length === 0" class="text-center text-muted">No hay fotos guardadas aún.</div>
           <div class="d-flex flex-wrap gap-3 justify-content-center">
             <img
               v-for="(p, i) in photos"
@@ -41,15 +64,23 @@
               :src="p.imagen"
               alt="Foto Jorge"
               class="img-thumbnail"
-              style="max-width: 150px;"
+              style="max-width: 150px; border: 2px solid #e10600;"
             />
           </div>
         </div>
 
-        <button class="btn btn-primary mt-3 w-100" @click="logout">Cerrar sesión</button>
+        <button
+          class="btn btn-outline-light w-100 mt-4 fw-semibold"
+          @click="logout"
+          style="letter-spacing: 1px;"
+        >
+          Cerrar sesión
+        </button>
       </div>
 
-      <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+      <div v-if="error" class="alert alert-danger mt-4" role="alert" style="font-weight: 600;">
+        {{ error }}
+      </div>
     </div>
   </div>
 </template>
@@ -74,14 +105,18 @@ function startLogin() {
 
   const user = username.value.toLowerCase()
 
-  if (user === 'jorge') {
+  if (user === 'jorge_gar_koke') {
     startVideo()
     loginStep.value = 1
-  } else if (user === 'ruiz') {
+  } else if (user === 'ruiz_chi#2') {
     photos.value = obtenerFotos()
-    loginStep.value = 2 // Ruiz inicia sesión directamente
-  } else {
     loginStep.value = 2
+  } else if (user === 'dani') {
+    loginStep.value = 2
+  } else if (user === 'lópez') {
+    loginStep.value = 2
+  } else {
+    error.value = 'Usuario no reconocido.'
   }
 }
 
@@ -150,9 +185,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-video {
-  max-height: 300px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+.login-container {
+  background: linear-gradient(135deg, #e10600 0%, #000 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-card {
+  border: 2px solid #e10600;
+}
+.gallery-container {
+  max-height: 400px;
+  overflow-y: auto;
 }
 </style>
